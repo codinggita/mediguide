@@ -1,227 +1,177 @@
-🏥 MediGuide – AI Healthcare Navigator
+# 🏥 MediGuide – AI Healthcare Navigator
 
-MediGuide is a full-stack healthcare navigation platform that helps users understand possible health conditions based on symptoms and discover nearby hospitals with estimated treatment costs. The application simplifies healthcare decision-making by providing a centralized platform for symptom search, hospital discovery, and healthcare planning.
+MediGuide is a **full-stack healthcare navigation platform** that helps users understand possible health conditions based on symptoms and discover nearby hospitals with estimated treatment costs. The application simplifies healthcare decision-making by providing a centralized platform for symptom search, hospital discovery, and healthcare planning.
 
-This project demonstrates a modern full stack architecture using React, Node.js, Express, and MongoDB while implementing essential features commonly used in real-world applications such as authentication, routing, state management, filtering, pagination, and CRUD operations.
+This project demonstrates a **modern full stack architecture** using React, Node.js, Express, and MongoDB while implementing essential features commonly used in real-world applications such as authentication, routing, state management, filtering, pagination, and CRUD operations.
 
-📌 Problem Statement
+---
+
+# 📌 Problem Statement
 
 Many people face confusion when they experience health symptoms and do not know:
 
-Which doctor or specialist they should consult
+- Which **doctor or specialist** they should consult  
+- Which **hospital or clinic** is available nearby  
+- The **approximate cost of tests or treatments**  
+- How to quickly **plan their healthcare visits**
 
-Which hospital or clinic is available nearby
+This issue becomes more serious for **travelers or people who are new to a city**, as they may not be familiar with nearby healthcare facilities.
 
-The approximate cost of tests or treatments
+As a result, patients often spend significant time searching for hospitals or medical guidance, which can lead to **delayed treatment and unnecessary stress**.
 
-How to quickly plan their healthcare visits
+---
 
-This issue becomes more serious for travelers or people who are new to a city, as they may not be familiar with nearby healthcare facilities.
+# 💡 Solution
 
-As a result, patients often spend significant time searching for hospitals or medical guidance, which can lead to delayed treatment and unnecessary stress.
+MediGuide provides a **digital healthcare navigation platform** where users can:
 
-💡 Solution
+- Enter symptoms and receive guidance on possible conditions  
+- Discover nearby hospitals and clinics  
+- Filter and sort hospitals based on cost or specialization  
+- Save preferred hospitals for future reference  
 
-MediGuide provides a digital healthcare navigation platform where users can:
+The platform acts as a **healthcare guidance and planning tool**, enabling users to make informed healthcare decisions quickly.
 
-Enter symptoms and receive guidance on possible conditions
+⚠️ *Note: MediGuide does not provide medical diagnosis. It only assists users in navigating healthcare services.*
 
-Discover nearby hospitals and clinics
+---
 
-Filter and sort hospitals based on cost or specialization
+# 🚀 Features
 
-Save preferred hospitals for future reference
+## 🔐 Authentication System
+- User signup and login
+- Password validation
+- LocalStorage-based authentication
+- Protected routes for logged-in users
 
-The platform acts as a healthcare guidance and planning tool, enabling users to make informed healthcare decisions quickly.
+## 🧭 Routing & Navigation
+- Client-side routing using **React Router**
+- Pages include:
+  - Home
+  - Login
+  - Signup
+  - Dashboard
+  - Profile
+  - Settings
 
-⚠️ Note: MediGuide does not provide medical diagnosis. It only assists users in navigating healthcare services.
-
-🚀 Features
-🔐 Authentication System
-
-User signup and login
-
-Password validation
-
-LocalStorage-based authentication
-
-Protected routes for logged-in users
-
-🧭 Routing & Navigation
-
-Client-side routing using React Router
-
-Pages include:
-
-Home
-
-Login
-
-Signup
-
-Dashboard
-
-Profile
-
-Settings
-
-⚛️ React Hooks
-
+## ⚛️ React Hooks
 The application demonstrates the use of important React Hooks:
 
-useState – Managing component state
+- **useState** – Managing component state  
+- **useEffect** – Handling API requests and side effects  
+- **useRef** – Managing DOM references and input focus  
+- **useContext** – Sharing global state across components  
 
-useEffect – Handling API requests and side effects
+## 🌍 Global State Management
+Global state is managed using **Context API**, allowing shared application data such as:
 
-useRef – Managing DOM references and input focus
+- User authentication state
+- Theme preferences
+- Search results
 
-useContext – Sharing global state across components
+## 🎨 Theme Support
+- Dark Mode / Light Mode toggle
+- Theme preference persistence using LocalStorage
 
-🌍 Global State Management
-
-Global state is managed using Context API, allowing shared application data such as:
-
-User authentication state
-
-Theme preferences
-
-Search results
-
-🎨 Theme Support
-
-Dark Mode / Light Mode toggle
-
-Theme preference persistence using LocalStorage
-
-🔍 Search, Filtering & Sorting
-
+## 🔍 Search, Filtering & Sorting
 Users can:
 
-Search hospitals by symptoms or location
+- Search hospitals by symptoms or location  
+- Filter hospitals by specialization or cost  
+- Sort hospitals based on rating, cost, or distance  
 
-Filter hospitals by specialization or cost
-
-Sort hospitals based on rating, cost, or distance
-
-⚡ Debouncing
-
+## ⚡ Debouncing
 Debouncing is implemented in search functionality to prevent excessive API calls while the user is typing.
 
-📄 Pagination
-
+## 📄 Pagination
 Hospital results are displayed using pagination to efficiently handle large datasets.
 
-🔄 CRUD Operations
-
+## 🔄 CRUD Operations
 The platform supports full database operations:
 
-Create – Register new users or save hospitals
+- **Create** – Register new users or save hospitals  
+- **Read** – Retrieve hospital data and user profiles  
+- **Update** – Update user profile information  
+- **Delete** – Remove saved hospitals or search history  
 
-Read – Retrieve hospital data and user profiles
+## 🔗 API Integration
+REST APIs built with **Node.js and Express.js** handle:
 
-Update – Update user profile information
+- User authentication  
+- Hospital data retrieval  
+- Profile updates  
+- Search functionality  
 
-Delete – Remove saved hospitals or search history
-
-🔗 API Integration
-
-REST APIs built with Node.js and Express.js handle:
-
-User authentication
-
-Hospital data retrieval
-
-Profile updates
-
-Search functionality
-
-🧾 Form Handling & Validation
-
+## 🧾 Form Handling & Validation
 Forms include:
 
-Input validation
+- Input validation  
+- Error messages  
+- Controlled components in React  
+- Proper user feedback  
 
-Error messages
+## 📱 Responsive UI
+The user interface is fully responsive using **Tailwind CSS**, ensuring compatibility across:
 
-Controlled components in React
+- Desktop  
+- Tablet  
+- Mobile devices  
 
-Proper user feedback
-
-📱 Responsive UI
-
-The user interface is fully responsive using Tailwind CSS, ensuring compatibility across:
-
-Desktop
-
-Tablet
-
-Mobile devices
-
-⚠️ Error Handling
-
+## ⚠️ Error Handling
 Error handling is implemented through:
 
-Backend try–catch blocks
+- Backend try–catch blocks  
+- API error responses  
+- Frontend error messages  
 
-API error responses
+---
 
-Frontend error messages
+# 🛠 Tech Stack
 
-🛠 Tech Stack
-Frontend
+## Frontend
+- ReactJS  
+- Tailwind CSS  
+- React Router  
 
-ReactJS
+## Backend
+- Node.js  
+- Express.js  
 
-Tailwind CSS
+## Database
+- MongoDB  
 
-React Router
+## State Management
+- Context API  
 
-Backend
+## Other Tools
+- REST APIs  
+- LocalStorage Authentication  
 
-Node.js
+---
 
-Express.js
-
-Database
-
-MongoDB
-
-State Management
-
-Context API
-
-Other Tools
-
-REST APIs
-
-LocalStorage Authentication
-
-🌍 Real-World Impact
+# 🌍 Real-World Impact
 
 MediGuide aims to improve healthcare accessibility by:
 
-Helping users quickly locate nearby hospitals
+- Helping users quickly locate nearby hospitals  
+- Reducing confusion when users experience health symptoms  
+- Supporting healthcare planning with estimated treatment information  
+- Assisting travelers and new residents in navigating local healthcare services  
 
-Reducing confusion when users experience health symptoms
+---
 
-Supporting healthcare planning with estimated treatment information
-
-Assisting travelers and new residents in navigating local healthcare services
-
-🔮 Future Improvements
+# 🔮 Future Improvements
 
 Possible future enhancements include:
 
-Online doctor appointment booking
+- Online doctor appointment booking  
+- Multi-language support  
+- Health insurance integration  
+- Telemedicine consultation  
+- Real-time hospital availability tracking  
 
-Multi-language support
+---
 
-Health insurance integration
+# 👩‍💻 Author
 
-Telemedicine consultation
-
-Real-time hospital availability tracking
-
-👩‍💻 Author
-
-Yashvi Kanani
+**Yashvi Kanani**
