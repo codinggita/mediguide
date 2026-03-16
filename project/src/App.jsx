@@ -32,7 +32,9 @@ export default function App() {
                 {/* Protected */}
                 <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                 <Route path="/hospitals" element={<ProtectedRoute><HospitalsPage /></ProtectedRoute>} />
+                <Route path="/maps" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
                 <Route path="/map" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
+                <Route path="/profile/maps" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
                 <Route path="/saved" element={<ProtectedRoute><SavedPage /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />

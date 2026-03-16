@@ -10,7 +10,7 @@ import { useLanguage } from '../../context/LanguageContext';
 const NAV = [
   { label: 'dashboard',       icon: LayoutDashboard, to: '/dashboard' },
   { label: 'nearbyHospitals', icon: Hospital,        to: '/hospitals' },
-  { label: 'mapView',        icon: Map,             to: '/map'       },
+  { label: 'mapView',        icon: Map,             to: '/maps'      },
   { label: 'savedHospitals', icon: BookmarkCheck,   to: '/saved'     },
   { label: 'profile',         icon: User,            to: '/profile'   },
   { label: 'settings',        icon: Settings,        to: '/settings'  },
@@ -109,7 +109,7 @@ export default function Sidebar({ onClose }) {
       {/* ── Navigation ─────────────────────────── */}
       <nav className="sidebar-nav">
         {NAV.map(({ label, icon: Icon, to }) => {
-          const active = pathname === to;
+          const active = pathname === to || (to === '/maps' && (pathname === '/map' || pathname === '/profile/maps'));
           return (
             <Link
               key={to}

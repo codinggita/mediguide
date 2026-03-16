@@ -10,6 +10,8 @@ const PAGE_TITLES = {
   '/dashboard': 'Dashboard',
   '/hospitals': 'Nearby Hospitals',
   '/map':       'Map View',
+  '/maps':      'Map View',
+  '/profile/maps': 'Map View',
   '/saved':     'Saved Hospitals',
   '/profile':   'Profile',
   '/settings':  'Settings',

@@ -313,7 +313,7 @@ export default function HospitalsPage() {
 
       {/* ── Floating Map Button ─────────────────── */}
       <Link
-        to="/map"
+        to="/maps"
         className="float-map-btn"
       >
         <span className="float-map-btn-pulse animate-pulse-dot" />

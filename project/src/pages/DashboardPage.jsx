@@ -105,7 +105,7 @@ export default function DashboardPage() {
   const QUICK_ACTIONS = [
     { label: t('bookAppointment'), icon: Thermometer,      to: '/hospitals', color: '#3b82f6', bg: isDark ? '#1e3a8a' : '#dbeafe' },
     { label: t('findDoctors'),     icon: Stethoscope,      to: '/hospitals', color: '#10b981', bg: isDark ? '#064e3b' : '#d1fae5' },
-    { label: t('nearbyPharmacy'),  icon: BriefcaseMedical, to: '/map',       color: '#f59e0b', bg: isDark ? '#78350f' : '#fef3c7' },
+    { label: t('nearbyPharmacy'),  icon: BriefcaseMedical, to: '/maps',       color: '#f59e0b', bg: isDark ? '#78350f' : '#fef3c7' },
     { label: t('diagnosticLabs'),  icon: TestTube,         to: '/hospitals', color: '#8b5cf6', bg: isDark ? '#4c1d95' : '#ede9fe' },
   ];
 
@@ -141,7 +141,7 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
-        <Link to="/map" className="btn-primary" style={{ fontSize: 13, padding: '12px 20px', borderRadius: 14 }}>
+        <Link to="/maps" className="btn-primary" style={{ fontSize: 13, padding: '12px 20px', borderRadius: 14 }}>
           {t('findHospitalsMap')} <ArrowRight size={15} />
         </Link>
       </div>
@@ -294,7 +294,7 @@ export default function DashboardPage() {
             <h3 style={{ fontSize: 18, fontWeight: 800, color: T.text, display: 'flex', alignItems: 'center', gap: 8, transition: 'color 0.3s ease' }}>
               <TrendingUp size={20} color={T.btn} /> Top Rated Hospitals
             </h3>
-            <Link to="/map" style={{ fontSize: 13, color: T.btn, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Link to="/maps" style={{ fontSize: 13, color: T.btn, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
               {t('viewAll')} <ChevronRight size={14} />
             </Link>
           </div>
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                 <strong style={{ color: T.btn }}>{hospitals.length}</strong> 
                 {lang === 'hi' ? ' अस्पताल मिले।' : lang === 'gu' ? ' હોસ્પિટલો મળી.' : ` ${t('hospitalNearbyFound')}.`}
               </p>
-              <Link to="/map" style={{
+              <Link to="/maps" style={{
                 display: 'block', width: '100%', background: T.btn, color: '#fff', fontSize: 13, fontWeight: 700,
                 padding: '12px 0', borderRadius: 12, textDecoration: 'none', transition: 'background 0.2s',
                 boxShadow: isDark ? '0 4px 12px rgba(59,130,246,0.3)' : '0 4px 12px rgba(37,99,235,0.2)'

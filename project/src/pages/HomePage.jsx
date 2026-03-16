@@ -286,7 +286,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <Link
-                to={user ? '/map' : '/login'}
+                to={user ? '/maps' : '/login'}
                 className="btn-primary inline-flex"
               >
                 <Map size={17} /> Open Live Map
@@ -346,7 +346,7 @@ export default function HomePage() {
                     </div>
                   </div>
                   <Link
-                    to={user ? '/map' : '/login'}
+                    to={user ? '/maps' : '/login'}
                     className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors"
                   >
                     Open full map <ArrowRight size={12} />

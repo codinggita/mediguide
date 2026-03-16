@@ -37,7 +37,7 @@ export default function Navbar() {
               <>
                 <Link to="/dashboard" className="text-slate-600 hover:text-blue-600 font-medium transition-colors text-sm">Dashboard</Link>
                 <Link to="/hospitals" className="text-slate-600 hover:text-blue-600 font-medium transition-colors text-sm">Hospitals</Link>
-                <Link to="/map" className="text-slate-600 hover:text-blue-600 font-medium transition-colors text-sm">Map</Link>
+                <Link to="/maps" className="text-slate-600 hover:text-blue-600 font-medium transition-colors text-sm">Map</Link>
               </>
             ) : (
               <>
@@ -99,7 +99,7 @@ export default function Navbar() {
                 <>
                   <Link to="/dashboard" className="px-4 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-medium text-sm" onClick={() => setMobileOpen(false)}>Dashboard</Link>
                   <Link to="/hospitals" className="px-4 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-medium text-sm" onClick={() => setMobileOpen(false)}>Hospitals</Link>
-                  <Link to="/map" className="px-4 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-medium text-sm" onClick={() => setMobileOpen(false)}>Map View</Link>
+                  <Link to="/maps" className="px-4 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-medium text-sm" onClick={() => setMobileOpen(false)}>Map View</Link>
                   <Link to="/saved" className="px-4 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-medium text-sm" onClick={() => setMobileOpen(false)}>Saved</Link>
                   <Link to="/profile" className="px-4 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-medium text-sm" onClick={() => setMobileOpen(false)}>Profile</Link>
                   <button onClick={handleLogout} className="px-4 py-2.5 rounded-xl hover:bg-red-50 text-red-500 font-medium text-sm text-left">Logout</button>
