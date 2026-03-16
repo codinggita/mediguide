@@ -175,3 +175,6 @@ Possible future enhancements include:
 # 👩‍💻 Author
 
 **Yashvi Kanani**
+
+🌐 Live Project:
+https://mediguide-project1.vercel.app/
