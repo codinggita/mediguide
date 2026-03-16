@@ -180,11 +180,11 @@ export default function ProfilePage() {
 
           <div className="px-6 pb-6">
             {/* Avatar and Profile Header */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 sm:gap-4 mb-8">
               
-              <div className="flex items-end gap-5">
+              <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-5">
                 {/* Image is specifically pulled up, breaking out of the container naturally */}
-                <div className="relative -mt-12 sm:-mt-14">
+                <div className="relative -mt-12 sm:-mt-14 self-start">
                   {user?.avatar ? (
                     <img src={user.avatar} alt="Profile" className="w-24 h-24 rounded-[20px] object-cover border-4 border-white shadow-lg bg-white" />
                   ) : (
@@ -200,7 +200,7 @@ export default function ProfilePage() {
                   </button>
                 </div>
                 
-                {/* Text block (NO negative margin here, so it sits naturally below the banner) */}
+                {/* Text block */}
                 <div className="pb-1">
                   <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">{user?.name}</h2>
                   <p className="text-slate-500 font-medium mt-0.5">{user?.email}</p>
@@ -208,18 +208,18 @@ export default function ProfilePage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="pb-1">
+              <div className="pb-1 w-full sm:w-auto">
                 {editing ? (
-                  <div className="flex gap-2">
-                    <button onClick={handleCancel} className="flex items-center gap-1.5 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                  <div className="flex gap-2 w-full">
+                    <button onClick={handleCancel} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
                       <X size={15} /> {t('cancel')}
                     </button>
-                    <button onClick={handleSave} className="flex items-center gap-1.5 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
+                    <button onClick={handleSave} className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-xl text-sm font-bold transition-colors shadow-md shadow-blue-600/20">
                       <Save size={15} /> {t('save')}
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 border-2 border-blue-100 text-blue-600 hover:bg-blue-50 hover:border-blue-200 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
+                  <button onClick={() => setEditing(true)} className="w-full sm:w-auto flex items-center justify-center gap-1.5 border-2 border-blue-100 text-blue-600 hover:bg-blue-50 hover:border-blue-200 px-4 py-2 rounded-xl text-sm font-bold transition-colors">
                     <Edit3 size={15} /> {t('editProfile')}
                   </button>
                 )}
@@ -227,7 +227,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
               {[
                 { label: t('savedHospitals'), value: user?.savedHospitals?.length || 0, icon: BookmarkCheck, color: 'text-blue-600', bg: 'bg-blue-50' },
                 { label: t('memberSince'), value: memberSince, icon: Calendar, color: 'text-purple-600', bg: 'bg-purple-50' },
