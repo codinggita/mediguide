@@ -5,17 +5,20 @@ import {
   User, Settings, LogOut, Heart, X,
 } from 'lucide-react';
 
+import { useLanguage } from '../../context/LanguageContext';
+
 const NAV = [
-  { label: 'Dashboard',       icon: LayoutDashboard, to: '/dashboard' },
-  { label: 'Nearby Hospitals', icon: Hospital,        to: '/hospitals' },
-  { label: 'Map View',        icon: Map,             to: '/map'       },
-  { label: 'Saved Hospitals', icon: BookmarkCheck,   to: '/saved'     },
-  { label: 'Profile',         icon: User,            to: '/profile'   },
-  { label: 'Settings',        icon: Settings,        to: '/settings'  },
+  { label: 'dashboard',       icon: LayoutDashboard, to: '/dashboard' },
+  { label: 'nearbyHospitals', icon: Hospital,        to: '/hospitals' },
+  { label: 'mapView',        icon: Map,             to: '/map'       },
+  { label: 'savedHospitals', icon: BookmarkCheck,   to: '/saved'     },
+  { label: 'profile',         icon: User,            to: '/profile'   },
+  { label: 'settings',        icon: Settings,        to: '/settings'  },
 ];
 
 export default function Sidebar({ onClose }) {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate   = useNavigate();
   const { pathname } = useLocation();
 
@@ -73,7 +76,11 @@ export default function Sidebar({ onClose }) {
       {user && (
         <div className="sidebar-user-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-            <div className="sidebar-user-avatar">{initials}</div>
+            {user.avatar ? (
+              <img src={user.avatar} alt={user.name} style={{ width: 44, height: 44, borderRadius: '12px', objectFit: 'cover', flexShrink: 0 }} />
+            ) : (
+              <div className="sidebar-user-avatar">{initials}</div>
+            )}
             <div style={{ minWidth: 0 }}>
               <p style={{ fontWeight: 700, fontSize: 13, color: '#0f172a', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                 {user.name}
@@ -89,7 +96,7 @@ export default function Sidebar({ onClose }) {
                 }}
               >
                 <span className="animate-pulse-dot" style={{ width: 5, height: 5, borderRadius: '50%', background: '#16a34a', display:'inline-block' }} />
-                Active
+                {t('active')}
               </span>
             </div>
           </div>
@@ -111,7 +118,7 @@ export default function Sidebar({ onClose }) {
               className={`sidebar-link ${active ? 'active' : ''}`}
             >
               <Icon size={17} className="sidebar-link-icon" strokeWidth={active ? 2.5 : 2} />
-              <span>{label}</span>
+              <span>{t(label)}</span>
               {/* saved count badge */}
               {to === '/saved' && (user?.savedHospitals?.length ?? 0) > 0 && (
                 <span className="sidebar-link-badge">
@@ -123,21 +130,6 @@ export default function Sidebar({ onClose }) {
         })}
       </nav>
 
-      {/* ── Help card ──────────────────────────── */}
-      <div style={{ margin: '0 10px 12px', padding: '14px', borderRadius: 12, background: 'linear-gradient(135deg,#eff6ff,#e0f2fe)', border: '1px solid #bfdbfe' }}>
-        <p style={{ fontWeight: 700, fontSize: 12, color: '#1d4ed8', marginBottom: 3 }}>🆘 Emergency?</p>
-        <p style={{ fontSize: 11, color: '#3b82f6', marginBottom: 10 }}>Dial 108 for instant ambulance assistance across India.</p>
-        <a
-          href="tel:108"
-          style={{
-            display: 'block', textAlign: 'center', background: '#dc2626', color: '#fff',
-            fontWeight: 700, fontSize: 12, padding: '7px 0', borderRadius: 8,
-            textDecoration: 'none',
-          }}
-        >
-          Call 108
-        </a>
-      </div>
 
       {/* ── Logout ─────────────────────────────── */}
       <div className="sidebar-footer">
@@ -149,7 +141,7 @@ export default function Sidebar({ onClose }) {
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#dc2626'; }}
         >
           <LogOut size={17} strokeWidth={2} />
-          <span>Logout</span>
+          <span>{t('logout')}</span>
         </button>
       </div>
     </aside>
