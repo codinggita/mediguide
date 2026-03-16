@@ -1,16 +1,75 @@
-# React + Vite
+# 🏥 MediGuide — Your Intelligent Healthcare Companion
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Vercel Deployment](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://mediguide-project1.vercel.app/)
+[![React](https://img.shields.io/badge/Built%20with-React-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Powered%20by-Vite-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev/)
 
-Currently, two official plugins are available:
+**MediGuide** is a state-of-the-art, premium healthcare discovery platform designed to bridge the gap between patients and medical facilities. With a focus on speed, accessibility, and modern aesthetics, MediGuide helps users find the best medical care near them in seconds.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **Live Demo:** [https://mediguide-project1.vercel.app/](https://mediguide-project1.vercel.app/)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+- **📍 Smart Hospital Discovery**: Filter hospitals by specialty, distance, and rating with real-time location awareness.
+- **🗺️ Interactive Map Interface**: Visualize medical facilities on a dynamic map powered by Leaflet, featuring custom markers and route previews.
+- **🌐 Localization**: Full support for multiple languages including **English**, **Hindi**, and **Gujarati** to ensure inclusivity.
+- **🌓 Dynamic UI/UX**: A beautiful, premium interface with seamless transitions between Light and Dark modes.
+- **👤 Personalized Experience**: secure authentication, customizable user profiles, and the ability to save favorite hospitals for quick access.
+- **⚡ Performance Optimized**: Built with React 19 and Vite for lightning-fast load times and a smooth experience.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🚀 Tech Stack
+
+- **Core**: [React 19](https://react.dev/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Mapping**: [Leaflet](https://leafletjs.com/) & [React-Leaflet](https://react-leaflet.js.org/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Routing**: [React Router 7](https://reactrouter.com/)
+- **HTTP Client**: [Axios](https://axios-http.com/)
+
+---
+
+## 🛠️ Getting Started
+
+Follow these steps to set up the project locally:
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd mediguide
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 📸 Preview
+
+MediGuide features a "Glassmorphic" design system with vibrant accents, ensuring a premium feel across all devices from mobile to desktop.
+
+---
+
+## 📄 License
+
+This project is developed for educational and professional demonstration purposes.
+
+---
+
+Developed with ❤️ by the MediGuide Team.
