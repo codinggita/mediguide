@@ -177,4 +177,4 @@ Possible future enhancements include:
 **Yashvi Kanani**
 
 🌐 Live Project:
-https://mediguide-project1.vercel.app/
+https://mediguide-p7.vercel.app/
