@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, MapPin, Edit3, Save, X, Camera, BookmarkCheck, Calendar, Shield, Upload, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-const CITIES = ['Ahmedabad', 'Mumbai', 'Bangalore', 'Delhi', 'Pune', 'Chennai', 'Hyderabad', 'Kolkata'];
+const CITIES = ['Ahmedabad', 'Kalol', 'Mumbai', 'Bangalore', 'Delhi', 'Pune', 'Chennai', 'Hyderabad', 'Kolkata'];
 
 /* ─── Camera Modal Component ─────────────────────── */
 function CameraModal({ onCapture, onCancel, onUpload }) {

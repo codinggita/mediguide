@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Heart, Eye, EyeOff, Mail, Lock, User, Phone, MapPin, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
-const CITIES = ['Ahmedabad', 'Mumbai', 'Bangalore', 'Delhi', 'Pune', 'Chennai', 'Hyderabad', 'Kolkata'];
+const CITIES = ['Ahmedabad', 'Kalol', 'Mumbai', 'Bangalore', 'Delhi', 'Pune', 'Chennai', 'Hyderabad', 'Kolkata'];
 
 export default function SignupPage() {
   const { signup } = useAuth();
