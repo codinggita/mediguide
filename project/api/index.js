@@ -251,7 +251,9 @@ export const autoSeed = async (data) => {
   try {
     const { Hospital, User } = defineModels();
     const count = await Hospital.countDocuments();
-    if (count < 50) {
+    // If database has significantly fewer hospitals than the new 4800 set, force re-seed
+    if (count < 4000) {
+      console.log(`🌱 Database has only ${count} hospitals. Re-seeding with full 4800 dataset...`);
       await Hospital.deleteMany({});
       await Hospital.insertMany(data);
     }
