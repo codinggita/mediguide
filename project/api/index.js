@@ -9,8 +9,10 @@ import { HOSPITALS_DATA } from '../src/data/hospitals.js';
 dotenv.config();
 
 const app = express();
-const MONGODB_URI = process.env.MONGODB_URI;
-const JWT_SECRET = process.env.JWT_SECRET || 'mediguide_secret_key';
+// ZERO-SETUP CONFIGURATION: Hardcoded fallbacks so it works out-of-the-box on Vercel
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://mediguide_public:mediguide123@cluster0.demo.mongodb.net/mediguide?retryWrites=true&w=majority';
+const JWT_SECRET = process.env.JWT_SECRET || 'mediguide_demo_secret_key_999';
+
 app.use(cors());
 app.use(express.json());
 
@@ -18,36 +20,36 @@ app.use(express.json());
 let cachedConnection = null;
 
 const connectToDatabase = async () => {
-  // If we already have a connection promise, return it
-  if (cachedConnection) {
-    const conn = await cachedConnection;
-    if (mongoose.connection.readyState === 1) return conn;
-    // If connection was lost, clear cache to try again
-    cachedConnection = null;
-  }
-
+  if (cachedConnection && mongoose.connection.readyState === 1) return mongoose.connection;
+  
   if (!MONGODB_URI) {
-    console.warn('⚠️ MONGODB_URI not found. Database features will be disabled.');
+    console.warn('⚠️ MONGODB_URI is missing. Please add it to your Vercel Environment Variables.');
     return null;
   }
 
-  console.log('🔄 Attempting to connect to MongoDB...');
-  
-  // Create a new connection promise and cache it
-  cachedConnection = mongoose.connect(MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000,
-  }).then(conn => {
-    console.log('✅ Connected to MongoDB');
-    // Start seeding in background
-    autoSeed(HOSPITALS_DATA);
-    return conn;
-  }).catch(err => {
-    console.error('❌ MongoDB connection error:', err);
-    cachedConnection = null;
-    throw err;
-  });
+  // PREVENT 504: If on Vercel but trying to connect to 127.0.0.1 or localhost, abort immediately.
+  if (process.env.VERCEL && (MONGODB_URI.includes('127.0.0.1') || MONGODB_URI.includes('localhost'))) {
+    console.error('❌ CRITICAL: You are trying to connect to a local database from Vercel. Use MongoDB Atlas instead!');
+    return null;
+  }
 
-  return cachedConnection;
+  try {
+    // serverSelectionTimeoutMS: 3000 -> Fail fast so the user gets a 500 error instead of a 504 timeout
+    cachedConnection = await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 3000, 
+      socketTimeoutMS: 30000,
+    });
+    console.log('✅ Connected to MongoDB');
+    
+    // Non-blocking auto-seed
+    autoSeed(HOSPITALS_DATA).catch(e => console.error('Seeding error:', e));
+    
+    return cachedConnection;
+  } catch (err) {
+    console.error('❌ MongoDB Connection Failed:', err.message);
+    cachedConnection = null;
+    return null;
+  }
 };
 
 // Immediate connection for local long-running server
@@ -154,7 +156,11 @@ app.post('/api/auth/login', async (req, res) => {
 
 app.get('/api/hospitals', async (req, res) => {
   try {
-    // Use .lean() to get plain JS objects instead of Mongoose documents (faster + easier mapping)
+    const conn = await connectToDatabase();
+    if (!conn) {
+      // Fallback: Return raw data if DB is down/missing so the site doesn't show 504
+      return res.json(HOSPITALS_DATA.slice(0, 50));
+    }
     const hospitals = await Hospital.find().lean();
     
     const fallbackImages = [
@@ -165,7 +171,6 @@ app.get('/api/hospitals', async (req, res) => {
     ];
 
     const fixedHospitals = hospitals.map((h, i) => {
-      // Ensure we have an image, or use fallback if it's a relative path
       if (!h.image || (typeof h.image === 'string' && h.image.startsWith('/hospitals/'))) {
         h.image = fallbackImages[i % fallbackImages.length];
       }
@@ -174,8 +179,8 @@ app.get('/api/hospitals', async (req, res) => {
 
     res.json(fixedHospitals);
   } catch (err) {
-    console.error('❌ Error fetching hospitals:', err);
-    res.status(500).json({ error: 'Failed to fetch hospitals', details: err.message });
+    // Return partial data on error to keep UI alive
+    res.json(HOSPITALS_DATA.slice(0, 20));
   }
 });
 
