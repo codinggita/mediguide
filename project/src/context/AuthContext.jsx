@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext(null);
 
@@ -14,20 +15,28 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = (userData) => {
-    const u = { ...userData, savedHospitals: userData.savedHospitals || [] };
-    setUser(u);
-    localStorage.setItem('mediguide_user', JSON.stringify(u));
+  const login = async (email, password) => {
+    try {
+      const res = await axios.post('/api/auth/login', { email, password });
+      setUser(res.data.user);
+      localStorage.setItem('mediguide_token', res.data.token);
+      localStorage.setItem('mediguide_user', JSON.stringify(res.data.user));
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.response?.data?.error || 'Login failed' };
+    }
   };
 
-  const signup = (userData) => {
-    const u = { ...userData, id: Date.now().toString(), savedHospitals: [], createdAt: new Date().toISOString() };
-    setUser(u);
-    localStorage.setItem('mediguide_user', JSON.stringify(u));
-    // Persist to all-users list
-    const existing = JSON.parse(localStorage.getItem('mediguide_users') || '[]');
-    existing.push(u);
-    localStorage.setItem('mediguide_users', JSON.stringify(existing));
+  const signup = async (userData) => {
+    try {
+      const res = await axios.post('/api/auth/signup', userData);
+      setUser(res.data.user);
+      localStorage.setItem('mediguide_token', res.data.token);
+      localStorage.setItem('mediguide_user', JSON.stringify(res.data.user));
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.response?.data?.error || 'Signup failed' };
+    }
   };
 
   const logout = () => {
@@ -35,39 +44,53 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('mediguide_user');
   };
 
-  const deleteAccount = () => {
+  const deleteAccount = async () => {
     if (user) {
-      // Remove from the all-users registry
-      const allUsers = JSON.parse(localStorage.getItem('mediguide_users') || '[]');
-      const updated  = allUsers.filter(u => u.id !== user.id && u.email !== user.email);
-      localStorage.setItem('mediguide_users', JSON.stringify(updated));
+      try {
+        await axios.delete(`/api/user/${user.id || user._id}`);
+      } catch (e) {
+        console.error("Failed to delete user from db", e);
+      }
     }
-    // Wipe current session and any saved theme / other keys
+    localStorage.removeItem('mediguide_token');
     localStorage.removeItem('mediguide_user');
     setUser(null);
   };
 
-  const updateUser = (updates) => {
-    const updated = { ...user, ...updates };
-    setUser(updated);
-    localStorage.setItem('mediguide_user', JSON.stringify(updated));
+  const updateUser = async (updates) => {
+    try {
+      if (user) {
+        const res = await axios.put(`/api/user/${user.id || user._id}`, updates);
+        if (res.data.success) {
+          const updated = { ...user, ...updates };
+          setUser(updated);
+          localStorage.setItem('mediguide_user', JSON.stringify(updated));
+        }
+      }
+    } catch(e) {
+      console.error("Failed to update user in db", e);
+    }
   };
 
-  const saveHospital = (hospital) => {
-    const saved = user.savedHospitals || [];
-    const exists = saved.find(h => h.id === hospital.id);
-    let updated;
-    if (exists) {
-      updated = saved.filter(h => h.id !== hospital.id);
-    } else {
-      updated = [...saved, hospital];
+  const saveHospital = async (hospital) => {
+    try {
+      const res = await axios.post('/api/user/save-hospital', { 
+        userId: user.id || user._id, 
+        hospitalId: hospital.id 
+      });
+      const updated = { ...user, savedHospitals: res.data.savedHospitals };
+      setUser(updated);
+      localStorage.setItem('mediguide_user', JSON.stringify(updated));
+      return true;
+    } catch (err) {
+      console.error('Save failed:', err);
+      return false;
     }
-    updateUser({ savedHospitals: updated });
-    return !exists;
   };
 
   const isHospitalSaved = (id) => {
-    return (user?.savedHospitals || []).some(h => h.id === id);
+    if (!user || !user.savedHospitals) return false;
+    return user.savedHospitals.includes(String(id));
   };
 
   return (

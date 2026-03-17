@@ -223,8 +223,8 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredHospitals.map((h, i) => (
-            <div key={h.id} className="animate-fadeInUp" style={{ animationDelay: `${i * 0.1}s` }}>
+          {Array.isArray(featuredHospitals) && featuredHospitals.map((h, i) => (
+            <div key={h.id || i} className="animate-fadeInUp" style={{ animationDelay: `${i * 0.1}s` }}>
               <HospitalCard hospital={h} />
             </div>
           ))}

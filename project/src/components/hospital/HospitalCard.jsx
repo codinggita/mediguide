@@ -13,6 +13,7 @@ export default function HospitalCard({ hospital, compact = false }) {
   const { isDark } = useTheme();
   const navigate = useNavigate();
   const [imgError, setImgError] = useState(false);
+  const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80';
   const saved = isHospitalSaved(hospital.id);
   const [justSaved, setJustSaved] = useState(false);
 
@@ -60,7 +61,12 @@ export default function HospitalCard({ hospital, compact = false }) {
       onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
       onMouseLeave={e => e.currentTarget.style.transform = 'none'}
     >
-      <img src={imgError ? 'https://via.placeholder.com/60x60?text=H' : hospital.image} alt={hospital.name} onError={() => setImgError(true)} style={{ width: 56, height: 56, borderRadius: 12, objectFit: 'cover', flexShrink: 0 }} />
+      <img 
+        src={imgError ? FALLBACK_IMAGE : (hospital.image || FALLBACK_IMAGE)} 
+        alt={hospital.name} 
+        onError={() => setImgError(true)} 
+        style={{ width: 56, height: 56, borderRadius: 12, objectFit: 'cover', flexShrink: 0 }} 
+      />
       <div style={{ minWidth: 0, flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2 }}>
           {hospital.verified && <Shield size={12} color="#3B82F6" />}
@@ -98,7 +104,7 @@ export default function HospitalCard({ hospital, compact = false }) {
       {/* Image */}
       <div style={{ position: 'relative', height: 180, overflow: 'hidden' }}>
         <img
-          src={imgError ? 'https://via.placeholder.com/400x200?text=Hospital' : hospital.image}
+          src={imgError ? FALLBACK_IMAGE : (hospital.image || FALLBACK_IMAGE)}
           alt={hospital.name}
           onError={() => setImgError(true)}
           style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}

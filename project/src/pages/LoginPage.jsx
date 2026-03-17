@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Heart, Eye, EyeOff, Mail, Lock, ArrowRight, Shield, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPass, setShowPass] = useState(false);
@@ -14,18 +16,12 @@ export default function LoginPage() {
     setError('');
     if (!form.email || !form.password) { setError('Please fill all fields.'); return; }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 800)); // Simulate API
-    // Check stored users
-    const users = JSON.parse(localStorage.getItem('mediguide_users') || '[]');
-    const found = users.find(u => u.email === form.email && u.password === form.password);
-    if (found) {
-      alert("Login successful!");
-      // navigate('/dashboard');
-    } else if (form.email === 'demo@mediguide.com' && form.password === 'demo1234') {
-      alert("Demo login successful!");
-      // navigate('/dashboard');
+    
+    const res = await login(form.email, form.password);
+    if (res.success) {
+      navigate('/dashboard');
     } else {
-      setError('Invalid credentials. Try demo@mediguide.com / demo1234');
+      setError(res.error);
     }
     setLoading(false);
   };

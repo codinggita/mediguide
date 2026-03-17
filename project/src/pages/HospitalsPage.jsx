@@ -8,11 +8,11 @@ import { useDebounce, useGeolocation } from '../hooks/useHooks';
 import { SPECIALIZATIONS, CITIES } from '../data/hospitals';
 import {
   Search, SlidersHorizontal, ChevronLeft, ChevronRight,
-  X, Filter, Map, ArrowUpDown,
+  X, Filter, Map, ArrowUpDown, Locate
 } from 'lucide-react';
 
 /* Category chips shown above the grid */
-const CHIPS = ['All', 'Multi-Specialty', 'Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics', 'Cancer Care'];
+const CHIPS = ['All', 'Multi-Specialty', 'General Medicine', 'Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics', 'Cancer Care'];
 
 export default function HospitalsPage() {
   const navigate   = useNavigate();
@@ -24,6 +24,7 @@ export default function HospitalsPage() {
     sortBy,     setSortBy,
     currentPage, setCurrentPage,
     getPaginatedHospitals,
+    detectLocation, locating
   } = useHospital();
 
   const [localSearch,  setLocalSearch]  = useState(searchQuery);
@@ -59,21 +60,7 @@ export default function HospitalsPage() {
     return () => clearTimeout(t);
   }, [debounced]);
 
-  const { location: geoCoords, city: geoCity, detectLocation } = useGeolocation();
-
-  useEffect(() => {
-    detectLocation();
-  }, []);
-
-  useEffect(() => {
-    if (geoCoords) {
-      setFilters(prev => ({
-        ...prev,
-        userCoords: geoCoords,
-        city: prev.city || geoCity
-      }));
-    }
-  }, [geoCoords, geoCity, setFilters]);
+  /* Location logic is now handled in HospitalProvider */
 
   const { data: hospitals, total, pages } = getPaginatedHospitals();
 
@@ -151,6 +138,15 @@ export default function HospitalsPage() {
             </button>
           )}
         </div>
+
+        <button
+          onClick={detectLocation}
+          disabled={locating}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl text-sm font-bold transition-all shadow-lg active:scale-95 disabled:opacity-60"
+        >
+          <Locate size={18} className={locating ? 'animate-spin' : ''} />
+          {locating ? 'Detecting...' : 'Update Location'}
+        </button>
 
         {/* Sort dropdown */}
         <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>

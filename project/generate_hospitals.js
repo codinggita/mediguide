@@ -34,6 +34,9 @@ const SPECIALIZATIONS = [
   'Gastroenterology',
   'Pulmonology',
   'Nephrology',
+  'Diabetology',
+  'Dermatology & Skin Allergy',
+  'Physiotherapy & Joint Pain'
 ];
 
 const PREFIXES = [
@@ -42,13 +45,14 @@ const PREFIXES = [
   'Metro', 'Apex', 'Prime', 'Trust', 'Rainbow', 'Wockhardt',
   'Columbia', 'Yatharth', 'Narayana', 'Manipal', 'Kokilaben',
   'Lilavati', 'Breach Candy', 'Jaslok', 'Hinduja', 'Hiranandani',
-  'SRM', 'MGM', 'KIMS', 'Care', 'Omega',
+  'SRM', 'MGM', 'KIMS', 'Care', 'Omega', 'Adani', 'Reliance', 'Tata'
 ];
 
 const SUFFIXES = [
   'Hospital', 'Medical Center', 'Healthcare', 'Institute of Medical Sciences',
   'Super Speciality Hospital', 'Multispeciality Hospital', 'Clinic & Research Centre',
   'Speciality Hospital', 'Advanced Care Hospital',
+  'Advanced Medical Centre', 'Wellness Hospital', 'Curative Care'
 ];
 
 // Specialization-aware hospital name templates
@@ -62,14 +66,17 @@ const SPEC_NAME_MAP = {
   'Ophthalmology':      ['Eye Hospital', 'Vision Care Centre', 'Eye Institute'],
   'Gynecology':         ['Women\'s Hospital', 'Maternity & Gynae Centre', 'Mother & Child Care'],
   'Psychiatry':         ['Mental Health Institute', 'Mind Care Hospital', 'Psychiatric Centre'],
-  'Dentistry':          ['Dental Hospital', 'Smile Dental Centre', 'Oral Health Care'],
+  'Dentistry':          ['Dental Hospital', 'Smile Dental Centre', 'Oral Health Care', 'Tooth Clinic'],
   'ENT':                ['ENT Hospital', 'Ear Nose Throat Centre', 'ENT & Head-Neck Hospital'],
   'Urology':            ['Urology Hospital', 'Kidney & Urology Centre', 'Uro Care Hospital'],
   'Gastroenterology':   ['Gastro Care Hospital', 'Digestive Health Centre', 'GI Hospital'],
   'Pulmonology':        ['Chest & Lung Hospital', 'Respiratory Care Centre', 'Pulmonary Institute'],
   'Nephrology':         ['Kidney Care Centre', 'Renal & Dialysis Hospital', 'Nephro Institute'],
-  'General Medicine':   ['General Hospital', 'Community Medical Centre', 'Primary Care Hospital'],
+  'General Medicine':   ['General Hospital', 'Community Medical Centre', 'Primary Care Hospital', 'Family Clinic'],
   'Multi-Specialty':    ['Multispeciality Medical Centre', 'Super Speciality Hospital', 'Integrated Health Campus'],
+  'Diabetology':        ['Diabetes Care Centre', 'Endocrine & Diabetology Hospital', 'Sugar Clinic', 'Metabolic Health Institute'],
+  'Dermatology & Skin Allergy': ['Skin & Allergy Hospital', 'Dermato-Allergy Centre', 'Advanced Skin Clinic', 'Allergy Relief Centre'],
+  'Physiotherapy & Joint Pain': ['Joint Pain Relief Centre', 'Physio & Rehab Hospital', 'Joint Care Institute', 'Motion Clinic']
 };
 
 const IMAGES = [
@@ -85,6 +92,13 @@ const IMAGES = [
   '1579684385127-1ef15d508118',
   '1559757148-5c350d0d3c56',
   '1599045118108-bf9954418b76',
+  '1512678146122-825044bc8925',
+  '1511174511545-9609969a66ce',
+  '1530497610245-94d3c16cda28',
+  '1502740479732-d296a751435d',
+  '1551076805-e18690237428',
+  '1512160350-08c6848f3b23',
+  '1533038590840-1cde6e56f29f'
 ];
 
 function randomBetween(a, b) {
@@ -97,23 +111,13 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-const AI_EXTERIORS = [
-  '/hospitals/mumbai.png',
-  '/hospitals/ahmedabad.png',
-  '/hospitals/delhi.png',
-  '/hospitals/generic.png'
-];
-
-const EXTERIORS = [
-  ...AI_EXTERIORS,
-  ...IMAGES.map(id => `https://images.unsplash.com/photo-${id}?w=800&q=80`)
-];
+const EXTERIORS = IMAGES.map(id => `https://images.unsplash.com/photo-${id}?w=800&q=80`);
 
 const INTERIORS = [
-  '/hospitals/reception.png',
-  '/hospitals/room.png',
-  // Keep one generic interior-ish unsplash photo for variety/OT
-  'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80' 
+  'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80',
+  'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80',
+  'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=800&q=80',
+  'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80'
 ];
 
 function pickWikiUrl(prefix) {
@@ -155,7 +159,7 @@ function pickExteriorByCity(cityName, prefix) {
     'Narayana': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Mazumdar_Shaw_Medical_Center%2C_Narayana_Health_City%2C_Bangalore.jpg/960px-Mazumdar_Shaw_Medical_Center%2C_Narayana_Health_City%2C_Bangalore.jpg',
     'Jaslok': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Jaslok_Hospital.jpg/800px-Jaslok_Hospital.jpg',
     'Breach Candy': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Breach_Candy_Hospital.jpg/800px-Breach_Candy_Hospital.jpg',
-    'KIMS': 'https://upload.wikimedia.org/wikipedia/commons/commons/thumb/6/66/KIMS_Hospital_Trivandrum.jpg/800px-KIMS_Hospital_Trivandrum.jpg', // correct URL
+    'KIMS': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/KIMS_Hospital_Trivandrum.jpg/800px-KIMS_Hospital_Trivandrum.jpg', // correct URL
     'Care': 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Care_hospital%2C_Hyderabad.jpg/960px-Care_hospital%2C_Hyderabad.jpg',
     'Manipal': 'https://upload.wikimedia.org/wikipedia/en/thumb/d/dd/Manipal_Hospitals_%28logo%29.png/960px-Manipal_Hospitals_%28logo%29.png'
   };
@@ -165,11 +169,7 @@ function pickExteriorByCity(cityName, prefix) {
     return realImages[prefix];
   }
 
-  // Try to match AI images with their specific cities for a realistic feel
-  if (cityName === 'Mumbai' && Math.random() > 0.4) return '/hospitals/mumbai.png';
-  if (cityName === 'Ahmedabad' && Math.random() > 0.4) return '/hospitals/ahmedabad.png';
-  if (['Delhi', 'Gurugram', 'Noida'].includes(cityName) && Math.random() > 0.4) return '/hospitals/delhi.png';
-  // otherwise, pick any generic or randomized image
+  // No realistic matching images, pick a random high-quality Unsplash image
   return pickRandom(EXTERIORS);
 }
 
@@ -185,6 +185,8 @@ const REAL_HOSPITAL_DATA = {
     { name: 'Shakti Multispeciality Hospital', spec: 'Multi-Specialty' },
     { name: 'Ankur Orthopaedic Hospital', spec: 'Orthopedics' },
     { name: 'Jawahar Children Hospital', spec: 'Pediatrics' },
+    { name: 'Kalol Diabetes & Heart Care', spec: 'Diabetology' },
+    { name: 'Skin & Laser Clinic Kalol', spec: 'Dermatology & Skin Allergy' },
   ],
   'Gandhinagar': [
     { name: 'Apollo Hospitals International Limited', spec: 'Multi-Specialty' },
@@ -195,6 +197,8 @@ const REAL_HOSPITAL_DATA = {
     { name: 'Aashka Multispeciality Hospitals', spec: 'Multi-Specialty' },
     { name: 'Health1 Super Speciality Hospital', spec: 'Cardiology' },
     { name: 'GMERS Medical College & Hospital', spec: 'General Medicine' },
+    { name: 'Gandhinagar Dental Care', spec: 'Dentistry' },
+    { name: 'Joint Pain & Physio Centre', spec: 'Physiotherapy & Joint Pain' },
   ],
   'Ahmedabad': [
     { name: 'Shalby Multi-Specialty Hospitals', spec: 'Orthopedics' },
@@ -208,6 +212,8 @@ const REAL_HOSPITAL_DATA = {
     { name: 'Sterling Hospital', spec: 'Multi-Specialty' },
     { name: 'SVP Institute of Medical Sciences', spec: 'Multi-Specialty' },
     { name: 'U. N. Mehta Institute of Cardiology', spec: 'Cardiology' },
+    { name: 'Ahmedabad Diabetes Centre', spec: 'Diabetology' },
+    { name: 'Skin Allergy & Dermato Care', spec: 'Dermatology & Skin Allergy' },
   ],
   'Mumbai': [
     { name: 'Tata Memorial Hospital', spec: 'Cancer Care' },
@@ -316,19 +322,19 @@ const generateHospitals = () => {
         name: real.name,
         specialization: real.spec,
         city: city.name,
-        address: `${randomBetween(1, 200)}, ${pickRandom(['Ring Road', 'MG Road', 'Inner Circle', 'Sector 16', 'Civil Lines', 'High Street', 'Society Row'])}, ${city.name}`,
-        phone: `+91 ${randomBetween(7000, 9999)} ${randomBetween(1000, 9999)}${randomBetween(10, 99)}`,
+        address: `${randomBetween(10, 500)}, ${pickRandom(['Main Road', 'Station Road', 'New Bypass', 'Sector 10', 'High Street', 'Colony Road'])}, ${city.name}`,
+        phone: `+91 ${randomBetween(7000, 9999)} ${randomBetween(100000, 999999)}`,
         email: `info@${real.name.toLowerCase().replace(/[^a-z]/g, '')}.com`,
         rating: randomFloat(4.4, 4.9, 1),
-        reviewCount: randomBetween(300, 25000),
-        consultationFee: randomBetween(500, 3000),
-        distance: randomFloat(0.5, 8.5, 1),
-        beds: randomBetween(150, 3000),
-        doctors: randomBetween(40, 1000),
+        reviewCount: randomBetween(300, 15000),
+        consultationFee: randomBetween(400, 2500),
+        distance: randomFloat(0.5, 6.5, 1),
+        beds: randomBetween(100, 2000),
+        doctors: randomBetween(30, 800),
         image: exterior.includes('unsplash') ? exterior.replace('w=800', 'w=400') : exterior,
         gallery: gallery,
-        lat: city.lat + (Math.random() - 0.5) * 0.1,
-        lng: city.lng + (Math.random() - 0.5) * 0.1,
+        lat: city.lat + (Math.random() - 0.5) * 0.12,
+        lng: city.lng + (Math.random() - 0.5) * 0.12,
         availability: 'Open 24/7',
         tags: [real.spec, 'Verified', 'Emergency', 'ICU'],
         verified: true,
@@ -337,12 +343,22 @@ const generateHospitals = () => {
       idCounter++;
     }
 
-    // Step 2: Quality top-up with credible specialized divisions (Total ~50 per city)
-    const targetCount = 50; 
+    // Step 2: Quality top-up with credible specialized divisions (Total ~120 per city)
+    const targetCount = 120; // Increased count
     const remaining = Math.max(0, targetCount - realList.length);
 
+    // Create a weighted specialization array
+    const weightedSpecs = [];
+    SPECIALIZATIONS.forEach(s => {
+      let weight = 1;
+      if (s === 'Multi-Specialty') weight = 15;
+      else if (s === 'General Medicine') weight = 8;
+      
+      for(let w=0; w<weight; w++) weightedSpecs.push(s);
+    });
+
     for (let i = 0; i < remaining; i++) {
-      const spec = pickRandom(SPECIALIZATIONS);
+      const spec = pickRandom(weightedSpecs);
       const prefix = pickRandom(PREFIXES);
       const specTemplate = pickRandom(SPEC_NAME_MAP[spec] || SUFFIXES);
       const name = `${prefix} ${specTemplate}`;
@@ -356,22 +372,22 @@ const generateHospitals = () => {
         name,
         specialization: spec,
         city: city.name,
-        address: `${randomBetween(1, 300)}, ${pickRandom(['Link Road', 'Outer Circle', 'Station Road', 'New Town', 'East Wing'])}, ${city.name}`,
-        phone: `+91 ${randomBetween(7000, 9999)} ${randomBetween(1000, 9999)}`,
+        address: `${randomBetween(1, 400)}, ${pickRandom(['Link Road', 'Outer Ring Road', 'Airport Road', 'Market Square', 'Green Park'])}, ${city.name}`,
+        phone: `+91 ${randomBetween(7000, 9999)} ${randomBetween(100000, 999999)}`,
         email: `contact@${prefix.toLowerCase()}${city.name.toLowerCase()}.org`,
-        rating: randomFloat(3.8, 4.7, 1),
-        reviewCount: randomBetween(100, 8000),
-        consultationFee: randomBetween(300, 1800),
-        distance: randomFloat(1, 20, 1),
-        beds: randomBetween(50, 1200),
-        doctors: randomBetween(15, 450),
+        rating: randomFloat(3.7, 4.7, 1),
+        reviewCount: randomBetween(50, 5000),
+        consultationFee: randomBetween(200, 1500),
+        distance: randomFloat(1, 15, 1),
+        beds: randomBetween(40, 1000),
+        doctors: randomBetween(10, 300),
         image: exterior.includes('unsplash') ? exterior.replace('w=800', 'w=400') : exterior,
         gallery: gallery,
-        lat: city.lat + (Math.random() - 0.5) * 0.18,
-        lng: city.lng + (Math.random() - 0.5) * 0.18,
-        availability: Math.random() > 0.2 ? 'Open 24/7' : 'Mon-Sat 9AM-8PM',
-        tags: [spec, ...['Verified', 'Diagnostics'].slice(0, randomBetween(0, 2))],
-        verified: Math.random() > 0.6,
+        lat: city.lat + (Math.random() - 0.5) * 0.22,
+        lng: city.lng + (Math.random() - 0.5) * 0.22,
+        availability: Math.random() > 0.15 ? 'Open 24/7' : 'Mon-Sat 10AM-7PM',
+        tags: [spec, ...['Verified', 'Modern'].slice(0, randomBetween(0, 2))],
+        verified: Math.random() > 0.5,
         wikiUrl: wikiUrl,
       });
       idCounter++;

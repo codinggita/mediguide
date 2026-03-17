@@ -36,9 +36,10 @@ function RecenterMap({ center }) {
 export default function MapPage() {
   const routerLocation = useLocation();
   const navigate = useNavigate();
-  const { getFilteredHospitals, setSearchQuery } = useHospital();
+  const { getFilteredHospitals, setSearchQuery, detectLocation, locating, filters } = useHospital();
   const hospitals = getFilteredHospitals();
-  const { location, city, loading: locLoading, detectLocation } = useGeolocation();
+  const location = filters.userCoords;
+  const city = filters.city;
   const [selected, setSelected] = useState(null);
   const [mapCenter, setMapCenter] = useState([23.0225, 72.5714]);
 
@@ -54,7 +55,6 @@ export default function MapPage() {
     }
   }, [routerLocation.search, routerLocation.state, routerLocation.pathname, navigate, setSearchQuery]);
 
-  useEffect(() => { detectLocation(); }, []);
   useEffect(() => {
     if (location) setMapCenter([location.lat, location.lng]);
   }, [location]);
@@ -77,11 +77,11 @@ export default function MapPage() {
         </div>
         <button
           onClick={detectLocation}
-          disabled={locLoading}
+          disabled={locating}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl text-sm font-bold transition-all shadow-lg active:scale-95 disabled:opacity-60"
         >
-          <Locate size={18} className={locLoading ? 'animate-spin' : ''} />
-          {locLoading ? 'Detecting...' : 'Update Location'}
+          <Locate size={18} className={locating ? 'animate-spin' : ''} />
+          {locating ? 'Detecting...' : 'Update Location'}
         </button>
       </div>
 
@@ -109,9 +109,9 @@ export default function MapPage() {
               )}
 
               {/* Hospital Markers */}
-              {hospitals.filter(h => h.lat && h.lng).map(h => (
+              {hospitals.filter(h => h.lat && h.lng).map((h, i) => (
                 <Marker
-                  key={h.id}
+                  key={`marker-${h.id || i}`}
                   position={[h.lat, h.lng]}
                   icon={hospitalIcon}
                   eventHandlers={{ click: () => setSelected(h) }}
@@ -156,9 +156,9 @@ export default function MapPage() {
                 <span className="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-full">{hospitals.length} Found</span>
               </div>
               <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                {hospitals.map(h => (
+                {hospitals.map((h, i) => (
                   <button
-                    key={h.id}
+                    key={`sidebar-item-${h.id || i}`}
                     onClick={() => { setSelected(h); setMapCenter([h.lat, h.lng]); }}
                     className={`w-full group p-3.5 rounded-2xl text-left border transition-all ${selected?.id === h.id ? 'bg-blue-600 border-blue-600 shadow-lg' : 'bg-slate-50 border-transparent hover:border-blue-200 hover:bg-white'}`}
                   >

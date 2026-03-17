@@ -25,12 +25,22 @@ export default function SignupPage() {
     if (!form.name || !form.email || !form.password) { setError('Please fill all required fields.'); return; }
     if (form.password !== form.confirm) { setError('Passwords do not match.'); return; }
     if (form.password.length < 6) { setError('Password must be at least 6 characters.'); return; }
+    
     setLoading(true);
-    await new Promise(r => setTimeout(r, 900));
-    const existing = JSON.parse(localStorage.getItem('mediguide_users') || '[]');
-    if (existing.find(u => u.email === form.email)) { setError('Email already registered.'); setLoading(false); return; }
-    signup({ name: form.name, email: form.email, phone: form.phone, city: form.city, password: form.password });
-    navigate('/dashboard');
+    const res = await signup({ 
+      name: form.name, 
+      email: form.email, 
+      phone: form.phone, 
+      city: form.city, 
+      password: form.password 
+    });
+
+    if (res.success) {
+      navigate('/dashboard');
+    } else {
+      setError(res.error);
+    }
+    setLoading(false);
   };
 
   const f = (field, val) => setForm(prev => ({ ...prev, [field]: val }));

@@ -15,12 +15,12 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-const QUICK = ['Fever', 'Cold', 'Headache', 'Chest Pain', 'Diabetes', 'Dental Pain', 'Skin Allergy', 'Joint Pain', 'Breathlessness'];
+const QUICK = ['Multi-Specialty', 'Fever', 'Cold', 'Headache', 'Chest Pain', 'Diabetes', 'Dental Pain', 'Skin Allergy', 'Joint Pain', 'Breathlessness'];
 
 export default function DashboardPage() {
   const { user }    = useAuth();
   const { isDark }  = useTheme();
-  const { hospitals, setFilters } = useHospital();
+  const { hospitals, setFilters, getFilteredHospitals } = useHospital();
   const { city, location, detectLocation } = useGeolocation();
   const { t, lang } = useLanguage();
   const [search,  setSearch]  = useState('');
@@ -61,26 +61,13 @@ export default function DashboardPage() {
     }
   }, [city, location, setFilters]);
 
-  const topRated = hospitals.filter(h => h.rating >= 4.5).slice(0, 2);
+  const filtered = getFilteredHospitals();
+  const topRated = filtered.filter(h => h.rating >= 4.5).slice(0, 2);
 
-  const suggestions = search.trim() ? hospitals.filter(h => {
-    const matchesQuery = h.name.toLowerCase().includes(search.toLowerCase()) ||
-                         h.specialization.toLowerCase().includes(search.toLowerCase()) ||
-                         (search.toLowerCase() === 'fever' && h.specialization === 'General Medicine');
-    const cityClusters = {
-      'kalol': ['Kalol', 'Ahmedabad', 'Gandhinagar'],
-      'gandhinagar': ['Kalol', 'Ahmedabad', 'Gandhinagar'],
-      'ahmedabad': ['Kalol', 'Ahmedabad', 'Gandhinagar'],
-      'delhi': ['Delhi', 'Gurugram', 'Noida'],
-      'gurugram': ['Delhi', 'Gurugram', 'Noida'],
-      'noida': ['Delhi', 'Gurugram', 'Noida'],
-    };
-    if (!matchesQuery) return false;
-    if (!city || city === 'Detecting...' || city === 'Your Location') return true;
-    const targetCity = city.toLowerCase();
-    const cluster = cityClusters[targetCity];
-    if (cluster) return cluster.includes(h.city);
-    return h.city.toLowerCase() === targetCity;
+  const suggestions = search.trim() ? filtered.filter(h => {
+    return h.name.toLowerCase().includes(search.toLowerCase()) ||
+           h.specialization.toLowerCase().includes(search.toLowerCase()) ||
+           (search.toLowerCase() === 'fever' && h.specialization === 'General Medicine');
   }).slice(0, 5) : [];
 
   const getCityQueryParam = () => {
@@ -96,10 +83,10 @@ export default function DashboardPage() {
                    (lang === 'hi' ? 'शुभ संध्या' : lang === 'gu' ? 'શુભ સાંજ' : 'Good evening');
 
   const STATS = [
-    { label: t('hospitalsNearby'),  value: hospitals.length,              icon: Hospital,      color: '#3b82f6', bg: isDark ? '#1e3a5f' : '#eff6ff', border: isDark ? '#1e40af' : '#bfdbfe', link: '/hospitals' },
+    { label: t('hospitalsNearby'),  value: filtered.length,              icon: Hospital,      color: '#3b82f6', bg: isDark ? '#1e3a5f' : '#eff6ff', border: isDark ? '#1e40af' : '#bfdbfe', link: '/hospitals' },
     { label: t('savedHospitals'),   value: user?.savedHospitals?.length || 0, icon: BookmarkCheck, color: '#ec4899', bg: isDark ? '#500724' : '#fdf2f8', border: isDark ? '#831843' : '#fbcfe8', link: '/saved' },
     { label: t('topRated'),  value: topRated.length,               icon: Star,          color: '#f59e0b', bg: isDark ? '#451a03' : '#fffbeb', border: isDark ? '#78350f' : '#fde68a', link: '/hospitals?rating=4.5' },
-    { label: t('specializations'),   value: 17,                            icon: Activity,      color: '#8b5cf6', bg: isDark ? '#2e1065' : '#f5f3ff', border: isDark ? '#4c1d95' : '#ddd6fe', link: '/hospitals' },
+    { label: t('specializations'),   value: 20,                            icon: Activity,      color: '#8b5cf6', bg: isDark ? '#2e1065' : '#f5f3ff', border: isDark ? '#4c1d95' : '#ddd6fe', link: '/hospitals' },
   ];
 
   const QUICK_ACTIONS = [
@@ -145,6 +132,8 @@ export default function DashboardPage() {
           {t('findHospitalsMap')} <ArrowRight size={15} />
         </Link>
       </div>
+
+      <DashboardEffect detectLocation={detectLocation} setLoading={setLoading} city={city} location={location} setFilters={setFilters} />
 
 
       {/* ── Search bar (Voice, Filter, Large) ──────────────────────────── */}
@@ -196,9 +185,9 @@ export default function DashboardPage() {
             transition: 'background 0.3s ease',
           }}>
             <div style={{ padding: 8 }}>
-              {suggestions.map(h => (
+              {suggestions.map((h, i) => (
                 <button
-                  key={h.id}
+                  key={h.id || `suggestion-${i}`}
                   onClick={() => window.open(h.wikiUrl || `https://www.google.com/search?q=${encodeURIComponent(h.name)}`, '_blank')}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: 12,
@@ -262,7 +251,7 @@ export default function DashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16, marginBottom: 32 }}>
         {STATS.map(({ label, value, icon: Icon, color, bg, border, link }) => (
           <Link
-            key={label}
+            key={`stat-${label}`}
             to={link}
             style={{
               background: T.card, borderColor: border, borderWidth: 1.5, borderStyle: 'solid',
@@ -304,7 +293,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px,1fr))', gap: 20 }}>
-              {topRated.map(h => <HospitalCard key={h.id} hospital={h} />)}
+              {topRated.map((h, i) => <HospitalCard key={h.id || `top-${i}`} hospital={h} />)}
             </div>
           )}
         </div>
@@ -330,7 +319,7 @@ export default function DashboardPage() {
               <h3 style={{ fontSize: 20, fontWeight: 800, color: T.text, marginBottom: 4 }}>{city || t('detecting')}</h3>
               <p style={{ fontSize: 13, color: T.textSec, marginBottom: 16 }}>
                 {lang === 'hi' ? 'आपके आस-पास ' : lang === 'gu' ? 'તમારી આસપાસ ' : 'Found '} 
-                <strong style={{ color: T.btn }}>{hospitals.length}</strong> 
+                <strong style={{ color: T.btn }}>{filtered.length}</strong> 
                 {lang === 'hi' ? ' अस्पताल मिले।' : lang === 'gu' ? ' હોસ્પિટલો મળી.' : ` ${t('hospitalNearbyFound')}.`}
               </p>
               <Link to="/maps" style={{
@@ -351,9 +340,9 @@ export default function DashboardPage() {
           }}>
             <h4 style={{ fontSize: 15, fontWeight: 800, color: T.text, marginBottom: 16 }}>{t('quickServices')}</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {QUICK_ACTIONS.map(({ label, icon: Icon, to, color, bg }) => (
+              {QUICK_ACTIONS.map(({ label, icon: Icon, to, color, bg }, i) => (
                 <Link
-                  key={label} to={to}
+                  key={`quick-action-${label || i}`} to={to}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderRadius: 12,
                     textDecoration: 'none', background: T.inputBg, border: `1px solid ${T.cardBorder}`,
@@ -450,4 +439,24 @@ export default function DashboardPage() {
       `}</style>
     </DashboardLayout>
   );
+}
+
+function DashboardEffect({ detectLocation, setLoading, city, location, setFilters }) {
+  useEffect(() => {
+    detectLocation();
+    const t = setTimeout(() => setLoading(false), 1100);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (city && city !== 'Detecting...' && city !== 'Your Location') {
+      setFilters(prev => ({ 
+        ...prev, 
+        city: city,
+        userCoords: location
+      }));
+    }
+  }, [city, location, setFilters]);
+  
+  return null;
 }
