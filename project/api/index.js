@@ -4,25 +4,69 @@ import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { HOSPITALS_DATA } from '../src/data/hospitals.js';
 
 dotenv.config();
 
 const app = express();
+const MONGODB_URI = process.env.MONGODB_URI;
+const JWT_SECRET = process.env.JWT_SECRET || 'mediguide_secret_key';
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI;
-const JWT_SECRET = process.env.JWT_SECRET || 'mediguide_secret_key';
+// MongoDB Connection Utility for Vercel (Serverless)
+let cachedConnection = null;
 
-if (MONGODB_URI) {
-  mongoose.connect(MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+const connectToDatabase = async () => {
+  // If we already have a connection promise, return it
+  if (cachedConnection) {
+    const conn = await cachedConnection;
+    if (mongoose.connection.readyState === 1) return conn;
+    // If connection was lost, clear cache to try again
+    cachedConnection = null;
+  }
+
+  if (!MONGODB_URI) {
+    console.warn('⚠️ MONGODB_URI not found. Database features will be disabled.');
+    return null;
+  }
+
+  console.log('🔄 Attempting to connect to MongoDB...');
+  
+  // Create a new connection promise and cache it
+  cachedConnection = mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+  }).then(conn => {
+    console.log('✅ Connected to MongoDB');
+    // Start seeding in background
+    autoSeed(HOSPITALS_DATA);
+    return conn;
+  }).catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    cachedConnection = null;
+    throw err;
+  });
+
+  return cachedConnection;
+};
+
+// Immediate connection for local long-running server
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  connectToDatabase().catch(() => {});
 }
 
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (err) {
+    res.status(500).json({ error: 'Database connection failed', details: err.message });
+  }
+});
+
 // --- MODELS ---
-const UserSchema = new mongoose.Schema({
+export const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -32,10 +76,9 @@ const UserSchema = new mongoose.Schema({
   avatar: String,
   savedHospitals: [{ type: String }],
   createdAt: { type: Date, default: Date.now }
-});
-export const User = mongoose.model('User', UserSchema);
+}));
 
-const HospitalSchema = new mongoose.Schema({
+export const Hospital = mongoose.models.Hospital || mongoose.model('Hospital', new mongoose.Schema({
   id: { type: String, unique: true },
   name: String,
   specialization: String,
@@ -57,8 +100,7 @@ const HospitalSchema = new mongoose.Schema({
   tags: [String],
   verified: Boolean,
   wikiUrl: String
-});
-export const Hospital = mongoose.model('Hospital', HospitalSchema);
+}));
 
 // --- ROUTES ---
 

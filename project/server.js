@@ -7,11 +7,6 @@ const port = process.env.PORT || 3000;
 // 1. Start Express Server
 const server = app.listen(port, async () => {
   console.log(`\n🚀 [BACKEND] Server is running on http://localhost:${port}`);
-  
-  // 2. Auto-Seed Database if empty
-  console.log('🔍 Checking database for hospital data...');
-  await autoSeed(HOSPITALS_DATA);
-
   console.log('🌐 [FRONTEND] Starting Vite development server...');
   
   // 3. Spawn Vite Frontend
