@@ -343,8 +343,8 @@ const generateHospitals = () => {
       idCounter++;
     }
 
-    // Step 2: Quality top-up with credible specialized divisions (Total ~120 per city)
-    const targetCount = 120; // Increased count
+    // Step 2: Quality top-up with credible specialized divisions (Total ~400 per city)
+    const targetCount = 400; // Increased to meet 400-500 request per city
     const remaining = Math.max(0, targetCount - realList.length);
 
     // Create a weighted specialization array

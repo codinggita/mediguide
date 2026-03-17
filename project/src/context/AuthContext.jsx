@@ -23,7 +23,13 @@ export function AuthProvider({ children }) {
       localStorage.setItem('mediguide_user', JSON.stringify(res.data.user));
       return { success: true };
     } catch (err) {
-      return { success: false, error: err.response?.data?.error || 'Login failed' };
+      let msg = 'Login failed. Please try again.';
+      if (err.response?.data?.error) {
+        msg = typeof err.response.data.error === 'string' ? err.response.data.error : JSON.stringify(err.response.data.error);
+      } else if (err.message) {
+        msg = err.message;
+      }
+      return { success: false, error: msg };
     }
   };
 
@@ -35,7 +41,13 @@ export function AuthProvider({ children }) {
       localStorage.setItem('mediguide_user', JSON.stringify(res.data.user));
       return { success: true };
     } catch (err) {
-      return { success: false, error: err.response?.data?.error || 'Signup failed' };
+      let msg = 'Signup failed. Please try again.';
+      if (err.response?.data?.error) {
+        msg = typeof err.response.data.error === 'string' ? err.response.data.error : JSON.stringify(err.response.data.error);
+      } else if (err.message) {
+        msg = err.message;
+      }
+      return { success: false, error: msg };
     }
   };
 
